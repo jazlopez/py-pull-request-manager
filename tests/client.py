@@ -13,11 +13,14 @@ class TestClient(unittest.TestCase):
         with self.assertRaises(ValueError):
             client.authorize(user_token=None)
 
-    def test_authorize_not_raises_exception_with_token(self):
+    def test_authorize_with_invalid_token_raises_bad_credentials_exception(self):
+
         """
         :return:
         """
-        self.assertIsInstance(client.authorize(user_token="foo"), github.Github)
+        with self.assertRaises(github.BadCredentialsException):
+
+            client.authorize(user_token="this-is-not-a-github-token").get_user("foo")
 
     def test_get_open_pull_requests_require_repo(self):
         """
@@ -32,20 +35,6 @@ class TestClient(unittest.TestCase):
         """
         with self.assertRaises(ValueError):
             client.get_open_pull_requests(repo="foo", base=None)
-
-    def test_get_open_pull_requests_not_raises_exception_with_required_parameters(self):
-
-        """
-        :return:
-        """
-        test_client = client.authorize(user_token="foo")
-        test_repo = test_client.get_repo("foo")
-
-        self.assertIsInstance(
-
-            client.get_open_pull_requests(repo=test_repo, base="foo"),
-
-            github.PaginatedList.PaginatedList)
 
 
 if __name__ == "__main__":
