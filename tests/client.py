@@ -1,7 +1,5 @@
 import unittest
-from unittest.mock import MagicMock
-
-import github
+from unittest.mock import MagicMock, ANY
 
 import client
 
@@ -13,33 +11,27 @@ class TestClient(unittest.TestCase):
         """
         :return:
         """
+        # declare mocks
+        client.authorize = MagicMock(user_token=None)
+        client.get_open_pull_requests = MagicMock(repo=None, base=None)
 
-        client.get_open_pull_requests = MagicMock(repo="foo", base="master", return_value=list())
+        # actual calls
+        client.authorize(user_token="token")
+        client.get_open_pull_requests(repo="foo", base="master")
 
-    def test_authorize_require_token(self):
-
-        """
-        :return:
-        """
-        with self.assertRaises(ValueError):
-            client.authorize(user_token=None)
-
-    def test_authorize_with_invalid_token_raises_bad_credentials_exception(self):
+    def test_authorize_valid_invocation(self):
 
         """
         :return:
         """
-        with self.assertRaises(github.BadCredentialsException):
+        client.authorize.assert_called_with(user_token=ANY)
 
-            client.authorize(user_token="this-is-not-a-github-token").get_user("foo")
-
-    def test_get_open_pull_request_valid_invoke(self):
+    def test_get_open_pull_request_valid_invocation(self):
 
         """
         :return:
         """
-
-        self.assertEqual(client.get_open_pull_requests(repo="foo", base="master"), list())
+        client.get_open_pull_requests.assert_called_with(repo=ANY, base=ANY)
 
 
 if __name__ == "__main__":
