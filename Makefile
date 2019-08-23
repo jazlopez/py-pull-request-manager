@@ -5,5 +5,6 @@ test:
 	python3 -m unittest -v tests/*.py
 
 coverage:
-	coverage3 run tests/*.py && coverage3 html -d output_html/
-
+	rm -rf output_html/
+	coverage3 run --include client.py,tests/*.py  -m unittest tests/*.py
+	coverage3 html -d output_html/
