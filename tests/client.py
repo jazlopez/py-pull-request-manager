@@ -1,9 +1,20 @@
-import client
 import unittest
+from unittest.mock import MagicMock
+
 import github
+
+import client
 
 
 class TestClient(unittest.TestCase):
+
+    def setUp(self):
+
+        """
+        :return:
+        """
+
+        client.get_open_pull_requests = MagicMock(repo="foo", base="master", return_value=list())
 
     def test_authorize_require_token(self):
 
@@ -22,19 +33,13 @@ class TestClient(unittest.TestCase):
 
             client.authorize(user_token="this-is-not-a-github-token").get_user("foo")
 
-    def test_get_open_pull_requests_require_repo(self):
-        """
-        :return:
-        """
-        with self.assertRaises(ValueError):
-            client.get_open_pull_requests(repo=None, base="master")
+    def test_get_open_pull_request_valid_invoke(self):
 
-    def test_get_open_pull_requests_require_base_branch(self):
         """
         :return:
         """
-        with self.assertRaises(ValueError):
-            client.get_open_pull_requests(repo="foo", base=None)
+
+        self.assertEqual(client.get_open_pull_requests(repo="foo", base="master"), list())
 
 
 if __name__ == "__main__":
