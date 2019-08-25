@@ -44,8 +44,23 @@ def get_open_pull_requests(repo=None, base=None):
 
     return repo.get_pulls(state='open', sort='created', base=base)
 
-def get_open_pull_requests_requested_reviewers():
-    pass
+
+def get_open_pull_requests_requested_reviewers(pull_requests=None):
+
+    result = list()
+
+    if not pull_requests:
+        raise ValueError("you must provide a paginated list of pull requests")
+
+    for pull_request in pull_requests:
+        user_review_requests = pull_request.get_review_requests()[0]
+        # teams_review_requests = pull.request.get_review_requests()[1]
+
+        users = [user for user in user_review_requests]
+
+        result.append(users)
+
+    return result
 
 
 __author__ = "Jaziel Lopez at jlopez.mx"

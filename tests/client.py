@@ -16,12 +16,7 @@ class TestClient(unittest.TestCase):
         """
 
         self.repo = MagicMock(github.Repository)
-        self.repo.get_pulls = MagicMock(
-            return_value=github.PaginatedList.PaginatedList(
-                contentClass='PullRequests',
-                requester=MagicMock(per_page=30),
-                firstUrl=ANY,
-                firstParams=ANY))
+        self.repo.get_pulls = MagicMock(return_value=unittest.mock.Mock(github.PaginatedList.PaginatedList))
 
         # mocked calls
         client.authorize(user_token="token", repository="foo")
@@ -70,12 +65,20 @@ class TestClient(unittest.TestCase):
         self.assertIsInstance(client.get_open_pull_requests(repo=self.repo, base="master"),
                               github.PaginatedList.PaginatedList)
 
-    def test_get_open_pull_requests_review_requester(self):
-
+    def test_get_open_pull_requests_review_requester_correct_invocation(self):
         """
         :return:
         """
-        client.get_open_pull_requests_requested_reviewers()
+        pull_request = MagicMock(github.PullRequest.PullRequest)
+        pull_requests = [pull_request, pull_request]
+
+        self.assertIsInstance(client.get_open_pull_requests_requested_reviewers(pull_requests=pull_requests), list)
+
+    def test_get_open_pull_requests_review_requester_require_paginated_list_of_pull_requests(self):
+
+        with self.assertRaises(ValueError):
+            client.get_open_pull_requests_requested_reviewers()
+
 
 
 if __name__ == "__main__":
