@@ -2,12 +2,15 @@ from github import Github
 
 # client using github api v3
 
+AUTHORIZED_USER = 0
+AUTHORIZED_REPOSITORY = 1
 
-def authorize(user_token=None, repository=None):
+def authorize(user_token=None, repository=None, returned_value=None):
 
     """
     :param user_token:
     :param repository:
+    :param returned_value:
     :return:
     """
 
@@ -17,7 +20,12 @@ def authorize(user_token=None, repository=None):
     if not repository:
         raise ValueError("you must provide a repository to read pull requests from")
 
-    return Github(login_or_token=user_token)
+    authentication = Github(login_or_token=user_token)
+
+    if returned_value is AUTHORIZED_REPOSITORY:
+        return authentication.get_repo(repository)
+
+    return authentication
 
 
 def get_open_pull_requests(repo=None, base=None):
