@@ -8,3 +8,5 @@ out
 gen
 /.coverage
 /output_html
+
+.env
