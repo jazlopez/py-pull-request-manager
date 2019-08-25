@@ -32,5 +32,8 @@ def get_open_pull_requests(repo=None, base=None):
 
     return repo.get_pulls(state='open', sort='created', base=base)
 
+def get_open_pull_requests_requested_reviewers():
+    pass
+
 
 __author__ = "Jaziel Lopez at jlopez.mx"
