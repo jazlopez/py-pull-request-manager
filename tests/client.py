@@ -24,36 +24,37 @@ class TestClient(unittest.TestCase):
                 firstParams=ANY))
 
         # mocked calls
-        client.authorize(user_token="token")
+        client.authorize(user_token="token", repository="foo")
 
     def test_authorize_require_token(self):
 
         with self.assertRaises(ValueError):
             client.authorize()
 
+    def test_authorize_require_repository(self):
+
+        with self.assertRaises(ValueError):
+            client.authorize(user_token="foo")
+
     def test_authorize_valid_invocation(self):
         """
         :return:
         """
-        # declare mocks
-        client.authorize = MagicMock(user_token=None)
-
-        #
-        client.authorize(user_token="foo")
-        client.authorize(user_token="bar")
-        client.authorize(user_token="baz")
-
-        #
-        client.authorize.assert_called_with(user_token=ANY)
+        client.authorize(user_token="foo", repository="foo")
 
     def test_get_open_pull_request_require_repo(self):
+        """
+        :return:
+        """
 
         with self.assertRaises(ValueError):
 
             client.get_open_pull_requests(base="master")
 
     def test_get_open_pull_request_require_base(self):
-
+        """
+        :return:
+        """
         with self.assertRaises(ValueError):
 
             client.get_open_pull_requests(repo=self.repo)
