@@ -75,10 +75,40 @@ class TestClient(unittest.TestCase):
         self.assertIsInstance(client.get_open_pull_requests_requested_reviewers(pull_requests=pull_requests), list)
 
     def test_get_open_pull_requests_review_requester_require_paginated_list_of_pull_requests(self):
-
+        """
+        :return:
+        """
         with self.assertRaises(ValueError):
             client.get_open_pull_requests_requested_reviewers()
 
+    def test_filter_requested_reviewer_correct_invocation(self):
+        """
+        :return:
+        """
+
+        results = client.filter_requested_reviewer(elements=[], filter_criteria="foo", by=client.BY_LOGIN_NAME)
+        self.assertIsInstance(results, list)
+
+    def test_filter_requested_reviewer_require_elements_to_filter(self):
+        """
+        :return:
+        """
+        with self.assertRaises(ValueError):
+            client.filter_requested_reviewer(filter_criteria="foo", by=client.BY_LOGIN_NAME)
+
+    def test_filter_requested_reviewer_require_filter_criteria(self):
+        """
+        :return:
+        """
+        with self.assertRaises(ValueError):
+            client.filter_requested_reviewer(elements=list(), by=client.BY_LOGIN_NAME)
+
+    def test_filter_requested_reviewer_require_filter_by(self):
+        """
+        :return:
+        """
+        with self.assertRaises(ValueError):
+            client.filter_requested_reviewer(elements=list(), filter_criteria="foo")
 
 
 if __name__ == "__main__":
