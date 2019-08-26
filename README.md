@@ -1,6 +1,19 @@
 # py-pull-request-manager
 Custom made script to manage github's pull requests
 
+```bash
+usage: main.py [-h] --login-name LOGIN_NAME --review-event {approve,comment,request_changes} --review-comment REVIEW_COMMENT
+
+arguments:
+
+  -h, --help            show this help message and exit
+  
+  --login-name LOGIN_NAME Your github login name
+  
+  --review-event {approve,comment,request_changes}  Review event
+  
+  --review-comment REVIEW_COMMENT   Review comment
+```
 #### COVERAGE
 
 #### Coverage report 98%
