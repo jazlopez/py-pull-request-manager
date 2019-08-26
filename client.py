@@ -2,9 +2,15 @@ from github import Github
 
 # client using github api v3
 
+# int constants
 AUTHORIZED_USER = 0
 AUTHORIZED_REPOSITORY = 1
 BY_LOGIN_NAME = 2
+
+# string constants
+PULL_REQUEST_EVENT_APPROVE = 'APPROVE'
+PULL_REQUEST_EVENT_REQUEST_CHANGES = 'REQUEST_CHANGES'
+PULL_REQUEST_EVENT_COMMENT = 'COMMENT'
 
 def authorize(user_token=None, repository=None, returned_value=None):
 
@@ -32,9 +38,10 @@ def authorize(user_token=None, repository=None, returned_value=None):
 def get_open_pull_requests(repo=None, base=None):
 
     """
+    retrieve open pull requests from specified repository
     :param repo:
     :param base:
-    :return:
+    :return github.PaginatedList.PaginatedList
     """
 
     if not repo:
@@ -47,6 +54,12 @@ def get_open_pull_requests(repo=None, base=None):
 
 
 def get_open_pull_requests_requested_reviewers(pull_requests=None):
+
+    """
+    retrieve requested reviewers from given pull request(s)
+    :param pull_requests:
+    :return list:
+    """
 
     result = list()
 
@@ -63,6 +76,7 @@ def get_open_pull_requests_requested_reviewers(pull_requests=None):
             "users": reviewers,
             "pull_request": {
                 "id": pull_request.id,
+                "number": pull_request.number,
                 "url": pull_request.url,
                 "title": pull_request.title
             }
@@ -72,6 +86,14 @@ def get_open_pull_requests_requested_reviewers(pull_requests=None):
 
 
 def filter_requested_reviewer(elements=None, filter_criteria=None, by=None):
+
+    """
+    retrieve pull request belonging to given login name
+    :param elements:
+    :param filter_criteria:
+    :param by:
+    :return list:
+    """
 
     result = []
 
@@ -95,4 +117,68 @@ def filter_requested_reviewer(elements=None, filter_criteria=None, by=None):
     return result
 
 
-__author__ = "Jaziel Lopez at jlopez.mx"
+def get_pull_request(pull_request_number=None, repo=None):
+    """
+    get pull request from given identifier
+    :param pull_request_number:
+    :param repo:
+    :return:
+    """
+    if not pull_request_number:
+        raise ValueError("you must provide pull request number")
+
+    if not repo:
+        raise ValueError("you must provide repo")
+
+    return repo.get_pull(pull_request_number)
+
+
+def approve_pull_request(pull_request=None, body_or_reason=None):
+    """
+    :param pull_request:
+    :param body_or_reason:
+    :return:
+    """
+
+    if not pull_request:
+        raise ValueError("you must provide pull request")
+
+    if not body_or_reason:
+        raise ValueError("you must provide approval comment(s)")
+
+    return pull_request.create_review(event=PULL_REQUEST_EVENT_APPROVE, body=body_or_reason)
+
+
+def comment_pull_request(pull_request=None, body_or_reason=None):
+    """
+    :param pull_request:
+    :param body_or_reason:
+    :return:
+    """
+
+    if not pull_request:
+        raise ValueError("you must provide pull request")
+
+    if not body_or_reason:
+        raise ValueError("you must provide comment(s)")
+
+    return pull_request.create_review(event=PULL_REQUEST_EVENT_COMMENT, body=body_or_reason)
+
+
+def request_changes_pull_request(pull_request=None, body_or_reason=None):
+    """
+    :param pull_request:
+    :param body_or_reason:
+    :return:
+    """
+
+    if not pull_request:
+        raise ValueError("you must provide pull request")
+
+    if not body_or_reason:
+        raise ValueError("you must provide request changes comment(s)")
+
+    return pull_request.create_review(event=PULL_REQUEST_EVENT_REQUEST_CHANGES, body=body_or_reason)
+
+
+__author__ = "Jaziel Lopez at jlopez.m x"
