@@ -1,5 +1,26 @@
 # py-pull-request-manager
-Custom made script to manage github's pull requests
+
+Automatic Github&acute;pull request event manager.
+
+##### FEATURES
+
+- Approve pending pull request
+- Comment pending pull request
+- Request changes pull request
+
+##### INSTALLATION
+    
+> *IMPORTANT*:
+> * require: python3 / pip3  
+> * works: OSX / linux
+
+Pip install packages
+
+```bash
+pip3 install -r requirements.txt
+```
+
+#####  USAGE
 
 ```bash
 usage: main.py [-h] --login-name LOGIN_NAME --review-event {approve,comment,request_changes} --review-comment REVIEW_COMMENT
@@ -14,6 +35,10 @@ arguments:
   
   --review-comment REVIEW_COMMENT   Review comment
 ```
+
+##### SCHEDULED SERVICE
+
+
 #### COVERAGE
 
 #### Coverage report 98%
