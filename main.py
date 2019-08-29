@@ -25,13 +25,26 @@ parser.add_argument("--login-name", required=True,  help="Your github login name
 parser.add_argument("--review-event", required=True, help="Review event",
                     choices=['approve', 'comment', 'request_changes'])
 parser.add_argument("--review-comment", required=True, help="Review comment")
+parser.add_argument("--repository", required=False, help="Overwrite system GITHUB_REPOSITORY variable environment")
+parser.add_argument("--base", required=False, help="Overwrite system GITHUB_BASE_PULL_REQUEST variable environment")
+
 args = parser.parse_args()
 
 LOGIN_NAME = args.login_name
 REVIEW_EVENT = args.review_event
 REVIEW_COMMENT = args.review_comment
 
+if args.repository:
+    GITHUB_REPOSITORY=args.repository
+
+if args.base:
+    GITHUB_BASE_PULL_REQUEST=args.base
+
 print("# signing in...asking for repository access using provided user token...")
+print("# repository connection details")
+print("# \trepository: {}".format(GITHUB_REPOSITORY))
+print("# \tbase branch: {}".format(GITHUB_BASE_PULL_REQUEST))
+
 
 repository = authorize(user_token=GITHUB_USER_TOKEN, repository=GITHUB_REPOSITORY, returned_value=AUTHORIZED_REPOSITORY)
 print("# authorization repository access allowed")
