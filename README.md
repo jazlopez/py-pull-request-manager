@@ -5,8 +5,10 @@ Automatic Github&acute;pull request event manager.
 ##### 1. FEATURES
 
 - Approve pending pull request
+- Create pull request
 - Comment pending pull request
 - Request changes pull request
+
 
 ##### 2. INSTALLATION
     
