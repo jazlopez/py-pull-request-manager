@@ -13,7 +13,7 @@
 #   0. You just DO WHAT THE FUCK YOU WANT TO.
 
 install:
-	pip3 install -r requirements.txt
+	pip3 install --ignore-installed -r requirements.txt 2> /dev/null
 
 test:
 	python3 -m unittest -v tests/*.py
