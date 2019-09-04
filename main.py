@@ -14,7 +14,7 @@
 
 import argparse
 import logging
-from settings import GITHUB_REPOSITORY, GITHUB_USER_TOKEN, GITHUB_BASE_PULL_REQUEST
+from settings import GITHUB_USER_TOKEN, GITHUB_LOGIN_NAME
 from client import authorize, get_open_pull_requests, \
     get_open_pull_requests_requested_reviewers, \
     approve_pull_request, request_changes_pull_request, \
@@ -22,44 +22,37 @@ from client import authorize, get_open_pull_requests, \
     BY_LOGIN_NAME, AUTHORIZED_REPOSITORY
 
 parser = argparse.ArgumentParser(description="")
-parser.add_argument("--login-name", required=True,  help="Your github login name")
 parser.add_argument("--review-event", required=True, help="Review event",
                     choices=['approve', 'comment', 'request_changes'])
 parser.add_argument("--review-comment", required=True, help="Review comment")
-parser.add_argument("--repository", required=False, help="Overwrite system GITHUB_REPOSITORY variable environment")
-parser.add_argument("--base", required=False, help="Overwrite system GITHUB_BASE_PULL_REQUEST variable environment")
+parser.add_argument("--repository", required=True, help="Repository pull request")
+parser.add_argument("--base", required=True, help="Base branch")
 
 args = parser.parse_args()
-
-LOGIN_NAME = args.login_name
 REVIEW_EVENT = args.review_event
 REVIEW_COMMENT = args.review_comment
-
-if args.repository:
-    GITHUB_REPOSITORY=args.repository
-
-if args.base:
-    GITHUB_BASE_PULL_REQUEST = args.base
+GITHUB_REPOSITORY = args.repository
+GITHUB_BASE = args.base
 
 logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=logging.INFO)
 
 logging.info("# signing in...asking for repository access using provided user token...")
 logging.info("# repository connection details")
 logging.info("# \trepository: {}".format(GITHUB_REPOSITORY))
-logging.info("# \tbase branch: {}".format(GITHUB_BASE_PULL_REQUEST))
+logging.info("# \tbase branch: {}".format(GITHUB_BASE))
 
 
 repository = authorize(user_token=GITHUB_USER_TOKEN, repository=GITHUB_REPOSITORY, returned_value=AUTHORIZED_REPOSITORY)
 logging.info("# authorization repository access allowed")
 
 logging.info("# fetching open pull requests...")
-open_pull_requests = get_open_pull_requests(repo=repository, base=GITHUB_BASE_PULL_REQUEST)
+open_pull_requests = get_open_pull_requests(repo=repository, base=GITHUB_BASE)
 
 logging.info("# fetching open pull requests reviewers...")
 reviewers = get_open_pull_requests_requested_reviewers(pull_requests=open_pull_requests)
 
 logging.info("# filter pull requests requiring your review...")
-filtered = filter_requested_reviewer(elements=reviewers, filter_criteria=LOGIN_NAME, by=BY_LOGIN_NAME)
+filtered = filter_requested_reviewer(elements=reviewers, filter_criteria=GITHUB_LOGIN_NAME, by=BY_LOGIN_NAME)
 
 if not filtered:
     logging.info("# you do not have any open pull request to review... bye")
@@ -88,7 +81,8 @@ for f in filtered:
     if REVIEW_EVENT == "request_changes":
         # request changes pull request
         requested_changes = request_changes_pull_request(pull_request=pull_request, body_or_reason=REVIEW_COMMENT)
-        logging.info("# requested changes for pull request:{}\n# content:{}".format(str(pull_request_number), REVIEW_COMMENT))
+        logging.info("# requested changes for pull request:{}\n# content:{}"
+                     .format(str(pull_request_number),REVIEW_COMMENT))
 
 logging.info("# --------------------------------------------")
 logging.info("# you do not have any outstanding pull request reviews to address... bye")
