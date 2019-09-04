@@ -12,8 +12,7 @@
 #
 #   0. You just DO WHAT THE FUCK YOU WANT TO.
 
-from github import Github
-
+from github import Github, GithubException
 # client using github api v3
 
 # int constants
@@ -47,6 +46,34 @@ def authorize(user_token=None, repository=None, returned_value=None):
         return authentication.get_repo(repository)
 
     return authentication
+
+
+def create_pull_request(repo=None, title=None, description=None, base=None, head=None):
+
+    """
+    :param repo:
+    :param title:
+    :param description:
+    :param base:
+    :param head:
+    :return:
+    """
+
+    if not repo:
+        raise ValueError("you must provide repo")
+
+    try:
+
+        return repo.create_pull(title=title, body=description, head=head, base=base)
+
+    except GithubException as e:
+
+        error_messages = []
+
+        for err in e.data["errors"]:
+            error_messages.append(err["message"])
+
+        raise RuntimeError("\n".join(error_messages))
 
 
 def get_open_pull_requests(repo=None, base=None):
