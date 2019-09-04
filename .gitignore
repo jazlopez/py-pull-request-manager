@@ -20,3 +20,4 @@ gen
 /output_html
 
 .env
+.env.*
