@@ -14,31 +14,33 @@ CONFIRM_RETRY=""
 function do_provision_credentials() {
     printf "\n"
     printf "Interactive Configure Github Credentials\n\n"
+
+    echo "  This program will manage pull requests by connecting to Github on your behalf. "
+    echo "  For more information see the link below:"
+    echo "  https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line"
+    echo ""
     read -p "> Enter your Github Login Name: " GITHUB_LOGIN_NAME
     read -p "> Enter your Github User Token: " GITHUB_USER_TOKEN
-
-    echo "==============================================="
-    echo "Github Login Name: $GITHUB_LOGIN_NAME"
-    echo "Github User Access Token: $GITHUB_USER_TOKEN"
-    echo "==============================================="
     read -p "Press [C] to confirm or [R] to reset values: " CONFIRM_RETRY
 }
 
 function do_provision_env_file() {
 
     if [[ -f .env ]]; then
-        cp .env .env.old
+        cp ./.env ./.env.old
     fi
 
     rm -f .env
 
     IFS=''
-    while read LINE; do echo "# $LINE" >> .env ; done < LICENSE.md
-
-    echo "GITHUB_USER_TOKEN=$GITHUB_USER_TOKEN" >> .env
-    echo "GITHUB_LOGIN_NAME=$GITHUB_LOGIN_NAME" >> .env
-    echo "==============================================="
+    while read LINE; do echo "# $LINE" >> ./.env; done < ./LICENSE.md
+    echo "" >> ./.env
+    echo "GITHUB_USER_TOKEN=$GITHUB_USER_TOKEN" >> ./.env
+    echo "GITHUB_LOGIN_NAME=$GITHUB_LOGIN_NAME" >> ./.env
+    echo "" >> ./.env
+    echo "--"
     echo ".env file has been configured successfully"
+    echo "Completed Installation"
     exit 0
 }
 

@@ -14,6 +14,7 @@
 
 install:
 	pip3 install --ignore-installed -r requirements.txt 2> /dev/null
+	/bin/bash env.provision.credentials.sh
 
 test:
 	python3 -m unittest -v tests/*.py
