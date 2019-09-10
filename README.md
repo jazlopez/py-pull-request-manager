@@ -14,13 +14,19 @@ Automatic Github&acute;pull request event manager.
 > * require: python3 / pip3  
 > * works: OSX / linux
 
-Pip install packages
+Run `make install` will go thru packages in requirements file and install them all using pip3
+
+As part of installation you will be prompt to provide github user access token and github login name.
 
 ```bash
-pip3 install -r requirements.txt
+make install
+
+# TODO add sample of output
 ```
 
 #####  3. USAGE
+
+> outdated, updated examples coming sooon
 
 * approve pull request review
 
