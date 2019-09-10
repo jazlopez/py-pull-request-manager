@@ -4,90 +4,89 @@ Automatic Github&acute;pull request event manager.
 
 ##### 1. FEATURES
 
+- Create pull request
 - Approve pending pull request
 - Comment pending pull request
 - Request changes pull request
 
 ##### 2. INSTALLATION
-    
+
 > *IMPORTANT*:
 > * require: python3 / pip3  
 > * works: OSX / linux
 
-Run `make install` will go thru packages in requirements file and install them all using pip3
-
-As part of installation you will be prompt to provide github user access token and github login name.
-
 ```bash
-make install
-
-# TODO add sample of output
+$ make install 
 ```
+
+
+Running `make install` to install dependencies as well as setup an environment file required for authentication. 
+
+[![asciicast](https://asciinema.org/a/wzCDs6BQlyjHAlDLtfQVSjvNE.svg)](https://asciinema.org/a/wzCDs6BQlyjHAlDLtfQVSjvNE)
 
 #####  3. USAGE
 
-> outdated, updated examples coming sooon
-
-* approve pull request review
+###### 3.1 Create pull request
 
 ```bash
-python3 main.py --login-name jaziel-lopez --review-event approve --review-comment "Approved."
+
+# arguments:
+# ---------------------------------------------------------
+# title:        pull requests title
+# description:  pull request's description
+# repository:   github's repository
+# head:     branch you want to incorporate changes from
+# base:     branch you want to incorporate changes to
+# ---------------------------------------------------------
+
+python3 create_pull_request.py --repository py-pull-request-manager --title "My Pull Request" --description "What pull request is about" --head devel --base master
 ```
 
-
-* comment pull request review
+###### 3.2 Approve open pull requests
 
 ```bash
-python3 main.py --login-name jaziel-lopez --review-event comment --review-comment "I am a Pull Request Review Comment."
+
+# arguments:
+# ---------------------------------------------------------
+# repository:   github's repository
+# review_comment:  comment of what you are approving of
+# review_event:    approve (do not modify)
+# base:     pull request's branch
+# ---------------------------------------------------------
+
+python3 main.py --repository py-pull-request-manager --base master --review-event approve --review-comment "Approved."
 ```
 
-* request changes pull request review
+###### 3.3 Request open pull request changes
 
 ```bash
-python3 main.py --login-name jaziel-lopez --review-event request_changes --review-comment "Fix it."
+
+# arguments:
+# ---------------------------------------------------------
+# repository:   github's repository
+# review_comment:  comment of what you are asking changes for
+# review_event:    request_changes (do not modify)
+# base:     pull request's branch
+# ---------------------------------------------------------
+
+python3 main.py --repository py-pull-request-manager --base master --review-event request_changes --review-comment "Fix it."
 ```
 
-* with cronjob (every 5 mins)
-
-You will need the absolute path of main.py script to prevent path no found error(s).
-
-
-```
-echo $PWD/main.py # copy in clipboard
-```
-
-Now open your crontab amd paste the command you copied before.
-
-```
-crontab -e
-
-*/5 * * * * python3 /full/path/to/main.py --login-name "your-login-name" --review-event approve --review-comment "Approved. Hey, I am using py-pull-request-manager by jazlopez. https://github.com/jazlopez/py-pull-request-manager"
-```
-
-Replace `/full/path/to/main.py` with the value you copied in the previous step. 
-
-Also replace the value of `--login-name` for your username instead.
-
-##### 4. HELP
-
+###### 3.4 Comment pull request changes
 
 ```bash
-usage: main.py [-h] --login-name LOGIN_NAME --review-event {approve,comment,request_changes} --review-comment REVIEW_COMMENT
 
-arguments:
+# arguments:
+# ---------------------------------------------------------
+# repository:   github's repository
+# review_comment:  comments
+# review_event:    comment (do not modify)
+# base:     pull request's branch
+# ---------------------------------------------------------
 
-  -h, --help            show this help message and exit
-  
-  --login-name LOGIN_NAME Your github login name
-  
-  --review-event {approve,comment,request_changes}  Review event
-  
-  --review-comment REVIEW_COMMENT   Review comment
+
+python3 main.py --repository py-pull-request-manager --base master --review-event comment --review-comment "I am a Pull Request Review Comment."
 ```
-
-#### 5. LICENSE 
-
-The Do What The Fuck You Want To Public License (WTFPL) is a free software license. There is a long ongoing battle between GPL zealots and BSD fanatics, about which license type is the most free of the two. In fact, both license types have unacceptable obnoxious clauses (such as reproducing a huge disclaimer that is written in all caps) that severely restrain our freedoms. The WTFPL can solve this problem.When analysing whether a license is free or not, you usually check that it allows free usage, modification and redistribution. Then you check that the additional restrictions do not impair fundamental freedoms. The WTFPL renders this task trivial: it allows everything and has no additional restrictions. How could life be easier? You just DO WHAT THE FUCK YOU WANT TO.
 
 #### 6. CONTACT
 
