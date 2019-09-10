@@ -41,8 +41,4 @@ try:
     logging.info("# Pull Request URL %s:", response.html_url)
 
 except RuntimeError as e:
-
     logging.error(e)
-    exit(1)
-
-exit(0)
