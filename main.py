@@ -54,38 +54,37 @@ reviewers = get_open_pull_requests_requested_reviewers(pull_requests=open_pull_r
 logging.info("# filter pull requests requiring your review...")
 filtered = filter_requested_reviewer(elements=reviewers, filter_criteria=GITHUB_LOGIN_NAME, by=BY_LOGIN_NAME)
 
-if not filtered:
-    logging.info("# you do not have any open pull request to review... bye")
-    exit(0)
+if filtered:
+   for f in filtered:
 
-for f in filtered:
+        # get reference pull request number
+        pull_request_number = f["pull_request"]["number"]
 
-    # get reference pull request number
-    pull_request_number = f["pull_request"]["number"]
+        logging.info("# ------------ PULL REQUEST {}----------------------".format(pull_request_number))
 
-    logging.info("# ------------ PULL REQUEST {}----------------------".format(pull_request_number))
+        # get pull request itself using the reference  number
+        pull_request = get_pull_request(pull_request_number=pull_request_number, repo=repository)
 
-    # get pull request itself using the reference  number
-    pull_request = get_pull_request(pull_request_number=pull_request_number, repo=repository)
+        if REVIEW_EVENT == "approve":
+            # approve pull request
+            approved = approve_pull_request(pull_request=pull_request, body_or_reason=REVIEW_COMMENT)
+            logging.info("# approved pull request:{}\n# content:{}".format(str(pull_request_number), REVIEW_COMMENT))
 
-    if REVIEW_EVENT == "approve":
-        # approve pull request
-        approved = approve_pull_request(pull_request=pull_request, body_or_reason=REVIEW_COMMENT)
-        logging.info("# approved pull request:{}\n# content:{}".format(str(pull_request_number), REVIEW_COMMENT))
+        if REVIEW_EVENT == "comment":
+            # approve pull request
+            approved = comment_pull_request(pull_request=pull_request, body_or_reason=REVIEW_COMMENT)
+            logging.info("# comment pull request:{}\n# content:{}".format(str(pull_request_number), REVIEW_COMMENT))
 
-    if REVIEW_EVENT == "comment":
-        # approve pull request
-        approved = comment_pull_request(pull_request=pull_request, body_or_reason=REVIEW_COMMENT)
-        logging.info("# comment pull request:{}\n# content:{}".format(str(pull_request_number), REVIEW_COMMENT))
+        if REVIEW_EVENT == "request_changes":
+            # request changes pull request
+            requested_changes = request_changes_pull_request(pull_request=pull_request, body_or_reason=REVIEW_COMMENT)
+            logging.info("# requested changes for pull request:{}\n# content:{}"
+                         .format(str(pull_request_number),REVIEW_COMMENT))
 
-    if REVIEW_EVENT == "request_changes":
-        # request changes pull request
-        requested_changes = request_changes_pull_request(pull_request=pull_request, body_or_reason=REVIEW_COMMENT)
-        logging.info("# requested changes for pull request:{}\n# content:{}"
-                     .format(str(pull_request_number),REVIEW_COMMENT))
+        logging.info("# --------------------------------------------")
 
-logging.info("# --------------------------------------------")
-logging.info("# you do not have any outstanding pull request reviews to address... bye")
+else:
 
-exit(0)
+    logging.info("# you do not have any outstanding pull request reviews to address... bye")
+
 __author__ = "Jaziel Lopez at jlopez.m x"
