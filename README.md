@@ -88,6 +88,10 @@ python3 main.py --repository py-pull-request-manager --base master --review-even
 python3 main.py --repository py-pull-request-manager --base master --review-event comment --review-comment "I am a Pull Request Review Comment."
 ```
 
-#### 6. CONTACT
+#### 6. TODO
+
+- Add tests
+
+#### 7. CONTACT
 
 Jaziel Lopez jlopez.mx
